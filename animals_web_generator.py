@@ -9,10 +9,13 @@ output = ''
 
 for animal in animals_data:
     try:
-        output += f"Name: {animal['name']}\n"
-        output += f"Location: {animal['locations'][0]}\n"
-        output += f"Diet: {animal['characteristics']['diet']}\n"
-        output += f"Type: {animal['characteristics']['type']}\n\n"
+        output += '<li class="cards__item">'
+        output += f"Name: {animal['name']}<br/>\n"
+        output += f"Location: {animal['locations'][0]}<br/>\n"
+        output += f"Diet: {animal['characteristics']['diet']}<br/>\n"
+        output += f"Type: {animal['characteristics']['type']}<br/>\n"
+        output += '</li>'
+
     except KeyError as e:
         print(f"Missing key: {e} in animal: {animal.get('name', 'Unknown')}")
 
