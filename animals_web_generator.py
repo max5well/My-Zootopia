@@ -5,16 +5,18 @@ def load_data(file_path):
         return json.load(handle)
 
 animals_data = load_data('animals_data.json')
-output = ''
+output = ""
 
 for animal in animals_data:
     try:
         output += '<li class="cards__item">'
-        output += f"Name: {animal['name']}<br/>\n"
-        output += f"Location: {animal['locations'][0]}<br/>\n"
-        output += f"Diet: {animal['characteristics']['diet']}<br/>\n"
-        output += f"Type: {animal['characteristics']['type']}<br/>\n"
-        output += '</li>'
+        output += f"<div class='card__title'>{animal['name']}</div>"
+        output += '<p class="card__text">'
+        output += f"<strong>Location:</strong> {animal['locations'][0]}<br/>\n"
+        output += f"<strong>Diet:</strong>: {animal['characteristics']['diet']}<br/>\n"
+        output += f"<strong>Type:</strong>: {animal['characteristics']['type']}<br/>\n"
+
+
 
     except KeyError as e:
         print(f"Missing key: {e} in animal: {animal.get('name', 'Unknown')}")
