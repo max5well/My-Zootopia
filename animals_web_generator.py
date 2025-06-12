@@ -22,33 +22,26 @@ def serialize_animal(data):
     output += '</li>\n'
     return output
 
-def create_animal_content(content):
-    output = ''
-    for animal_obj in content:
-        try:
-            output += serialize_animal(animal_obj)
-        except KeyError as e:
-            print(f"Missing key: {e} in animal: {animal_obj.get('name', 'Unknown')}")
-    return output
-
-#Reading the existing template and replace the placeholder text with the animal data.
-def generate_html(TEMPLATE_PATH, output, NEW_FILE_PATH):
-    with open(TEMPLATE_PATH, 'r') as infile:
+def generate_html(template_path, content, output_path):
+    with open(template_path, 'r') as infile:
         html_code = infile.read()
-
-    new_html = html_code.replace("__REPLACE_ANIMALS_INFO__", output)
-
-    with open(NEW_FILE_PATH, 'w') as outfile:
+    new_html = html_code.replace("__REPLACE_ANIMALS_INFO__", content)
+    with open(output_path, 'w') as outfile:
         outfile.write(new_html)
 
 
 def main():
-    animal_name = input("Please enter an animal: ")
-    data = data_fetcher.fetch_data(animal_name)
-    print(data)
-    output = create_animal_content(data)
-    generate_html(TEMPLATE_PATH, output, NEW_FILE_PATH)
+    animal_name = input("Enter animal name: ").strip()
+    api_data = data_fetcher.fetch_data(animal_name)
 
+    if api_data and len(api_data) > 0:
+        html_content = serialize_animal(api_data[0])
+        print("Website was successfully generated to the file animals.html.")
+    else:
+        html_content = f'<h2>The animal "{animal_name}" doesn\'t exist or data could not be loaded.</h2>'
+        print("Website was not successfully generated.")
+
+    generate_html(TEMPLATE_PATH, html_content, NEW_FILE_PATH)
 
 if __name__ == "__main__":
     main()
