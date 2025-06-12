@@ -1,32 +1,54 @@
-import json
+import data_fetcher
 
-def load_data(file_path):
-    with open(file_path, "r") as handle:
-        return json.load(handle)
+TEMPLATE_PATH = 'animals_template.html'
+NEW_FILE_PATH = 'animals.html'
 
-animals_data = load_data('animals_data.json')
-output = ""
+def serialize_animal(data):
+    name = data.get('name', 'Unknown')
+    location = data.get('locations', ['Unknown'])[0]
+    characteristics = data.get('characteristics', {})
+    diet = characteristics.get('diet', 'Unknown')
+    threat = characteristics.get('biggest_threat', 'Unknown')
+    animal_type = characteristics.get('type', 'Unknown')
 
-for animal in animals_data:
-    try:
-        output += '<li class="cards__item">'
-        output += f"<div class='card__title'>{animal['name']}</div>"
-        output += '<p class="card__text">'
-        output += f"<strong>Location:</strong> {animal['locations'][0]}<br/>\n"
-        output += f"<strong>Diet:</strong>: {animal['characteristics']['diet']}<br/>\n"
-        output += f"<strong>Type:</strong>: {animal['characteristics']['type']}<br/>\n"
+    output = '<li class="cards__item">\n'
+    output += f"  <div class='card__title'>{name}</div>\n"
+    output += '  <p class="card__text">\n'
+    output += f"    <strong>Location:</strong> {location}<br/>\n"
+    output += f"    <strong>Diet:</strong> {diet}<br/>\n"
+    output += f"    <strong>Type:</strong> {animal_type}<br/>\n"
+    output += f"    <strong>Biggest threat:</strong> {threat}<br/>\n"
+    output += '  </p>\n'
+    output += '</li>\n'
+    return output
+
+def create_animal_content(content):
+    output = ''
+    for animal_obj in content:
+        try:
+            output += serialize_animal(animal_obj)
+        except KeyError as e:
+            print(f"Missing key: {e} in animal: {animal_obj.get('name', 'Unknown')}")
+    return output
+
+#Reading the existing template and replace the placeholder text with the animal data.
+def generate_html(TEMPLATE_PATH, output, NEW_FILE_PATH):
+    with open(TEMPLATE_PATH, 'r') as infile:
+        html_code = infile.read()
+
+    new_html = html_code.replace("__REPLACE_ANIMALS_INFO__", output)
+
+    with open(NEW_FILE_PATH, 'w') as outfile:
+        outfile.write(new_html)
 
 
+def main():
+    animal_name = input("Please enter an animal: ")
+    data = data_fetcher.fetch_data(animal_name)
+    print(data)
+    output = create_animal_content(data)
+    generate_html(TEMPLATE_PATH, output, NEW_FILE_PATH)
 
-    except KeyError as e:
-        print(f"Missing key: {e} in animal: {animal.get('name', 'Unknown')}")
 
-with open('animals_template.html', 'r') as infile:
-    html_code = infile.read()
-
-# Step 3: Replace the placeholder
-new_html = html_code.replace("__REPLACE_ANIMALS_INFO__", output)
-
-# Step 4: Write to a new HTML file
-with open('animals.html', 'w') as outfile:
-    outfile.write(new_html)
+if __name__ == "__main__":
+    main()

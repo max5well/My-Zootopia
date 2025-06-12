@@ -1,5 +1,5 @@
 import requests
-animal_name = input("Enter animal's name: ")
+animal_name = input("Enter a name of an animal: ")
 API_KEY = 'rLTeXYU0+WOouTvDsPzTtQ==ID4hu39rnko8WJmi'
 URL = 'https://api.api-ninjas.com/v1/animals?name={}'.format(animal_name)
 
