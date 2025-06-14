@@ -1,4 +1,9 @@
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+API_KEY = os.getenv("ANIMALS_API_KEY")
 
 API_KEY = 'rLTeXYU0+WOouTvDsPzTtQ==ID4hu39rnko8WJmi'
 
@@ -14,7 +19,7 @@ def fetch_data(animal_name):
         return animal_raw_data.json()
     else:
         print("Error:", animal_raw_data.status_code, animal_raw_data.text)
-
+        return []
 
 
 if __name__ == '__main__':

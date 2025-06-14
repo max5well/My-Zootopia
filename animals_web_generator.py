@@ -35,13 +35,16 @@ def main():
     api_data = data_fetcher.fetch_data(animal_name)
 
     if api_data and len(api_data) > 0:
-        html_content = serialize_animal(api_data[0])
+        html_content = ""
+        for animal in api_data:
+            html_content += serialize_animal(animal) + "<hr>"  # Optional: Trenner zwischen Tieren
         print("Website was successfully generated to the file animals.html.")
     else:
         html_content = f'<h2>The animal "{animal_name}" doesn\'t exist or data could not be loaded.</h2>'
         print("Website was not successfully generated.")
 
     generate_html(TEMPLATE_PATH, html_content, NEW_FILE_PATH)
+
 
 if __name__ == "__main__":
     main()
